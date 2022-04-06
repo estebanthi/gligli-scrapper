@@ -30,7 +30,7 @@ class QCM:
     def get_json(self):
         return {'question': self.question, 'linked_image': self.linked_image, 'responses': self.responses,
                 'good_response': self.good_response, 'correction': self.correction,
-                'correction_image': self.correction_image}
+                'correction_image': self.correction_image, 'category': self.category, 'theme': self.theme}
 
     @staticmethod
     def format_text(text):

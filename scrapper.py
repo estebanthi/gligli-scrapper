@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 from qcm import QCM
+from database import Database
 
 
 class Scrapper:
@@ -12,6 +13,7 @@ class Scrapper:
     def __init__(self, driver):
         self.driver = driver
         self.email, self.password = self._load_config()
+        self.database = Database()
 
     def _load_config(self):
         with open('config.yml', 'r') as config_file:
@@ -34,15 +36,21 @@ class Scrapper:
             themes = self._get_themes()
             for i in range(len(themes)):
                 qcms = self._run_for_theme(index, i)
+                self._insert_qcms_into_database(qcms)
                 category = self._get_categories()[index]
                 category.click()
                 print(f"j : {i}")
 
         else:
             qcms = self._run_for_non_theme(index)
+            self._insert_qcms_into_database(qcms)
 
         qcm_button = self.driver.find_element(By.XPATH, value='//*[@id="appleNav"]/li[1]/a')
         qcm_button.click()
+
+    def _insert_qcms_into_database(self, qcms):
+        qcms = [qcm.get_json() for qcm in qcms]
+        self.database.insert_many_qcms(qcms)
 
     def _wait_category_available(self):
         try:
