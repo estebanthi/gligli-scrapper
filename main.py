@@ -6,4 +6,4 @@ from scrapper import Scrapper
 driver = webdriver.Chrome()
 
 scrapper = Scrapper(driver)
-scrapper.run()
+print(scrapper.get_themes_mappers())

@@ -29,6 +29,35 @@ class Scrapper:
             self._run_for_category(i)
             print(f"i : {i}")
 
+    def get_categories_mapper(self):
+        self._login()
+        self._wait_login_completed()
+        self._click_on_qcm_button()
+        categories = self.driver.find_elements(By.XPATH, value='//form[not(@name)]//table//tbody//tr//td//p')
+        return {index: category.text.split('\n')[0] for index, category in enumerate(categories)}
+
+    def get_themes_mappers(self):
+        self._login()
+        self._wait_login_completed()
+        self._click_on_qcm_button()
+
+        categories = self.driver.find_elements(By.XPATH, value='//form[not(@name)]//table//tbody//tr//td//p')
+
+        mappers = []
+        for i in range(len(categories)):
+            if i not in [1, 7]:
+                category = self._get_categories()[i]
+                category.click()
+                themes = self.driver.find_elements(By.XPATH, value='//form//table//tbody//tr//td//p')
+                mapper = {index: theme.text.split('\n')[0] for index, theme in enumerate(themes)}
+                mappers.append(mapper)
+                qcm_button = self.driver.find_element(By.XPATH, value='//*[@id="appleNav"]/li[1]/a')
+                qcm_button.click()
+            else:
+                mappers.append({})
+        return {index: mapper for index, mapper in enumerate(mappers)}
+
+
     def _run_for_category(self, index):
         category = self._get_categories()[index]
         category.click()
