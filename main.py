@@ -1,9 +1,3 @@
-from selenium import webdriver
-
-from scrapper import Scrapper
+from database import Database
 
 
-driver = webdriver.Chrome()
-
-scrapper = Scrapper(driver)
-scrapper.run()
